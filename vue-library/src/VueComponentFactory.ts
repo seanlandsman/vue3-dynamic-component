@@ -10,7 +10,8 @@ export class VueComponentFactory implements ComponentCreator {
         this.parent = parent;
     }
 
-    private tryC(componentDefinition: any) {
+    private tryC(prefix: any, componentDefinition: any) {
+        console.log(prefix, "----------------------------------------------------------------------------------------------------");
         try {
             let componentInstance: any = null;
             const extendedComponentDefinition = defineComponent({
@@ -27,11 +28,13 @@ export class VueComponentFactory implements ComponentCreator {
             const mountedComponent = createApp(extendedComponentDefinition)
             mountedComponent.mount(container);
 
-            console.log(componentInstance);
+            // console.log(componentInstance);
             console.log(componentInstance.$el);
 
         } catch (e) {
             console.log(e);
+        } finally {
+            console.log(prefix, "----------------------------------------------------------------------------------------------------");
         }
     }
 
@@ -42,6 +45,11 @@ export class VueComponentFactory implements ComponentCreator {
         if (typeof component === 'string') {
             // look up the definition in Vue
             componentDefinition = this.searchForComponentInstance(component);
+
+            // this.tryC('1', componentDefinition)
+            // this.tryC('2', defineComponent(componentDefinition))
+            // this.tryC('3', {extends: defineComponent(componentDefinition)})
+            // this.tryC('4', {extends: defineComponent({...componentDefinition})})
 
             // it's probably an SFC, but if it has template attribute it's probably
             // an inline/non-sfc component (ie an object a template property)
@@ -101,6 +109,7 @@ export class VueComponentFactory implements ComponentCreator {
         const mountedComponent = createApp(extendedComponentDefinition)
         mountedComponent.mount(container);
 
+        debugger
         // note that the component creation is synchronous so that componentInstance is set by this point
         // return {mountedComponent, componentInstance};
         // return {mountedComponent, componentInstance}

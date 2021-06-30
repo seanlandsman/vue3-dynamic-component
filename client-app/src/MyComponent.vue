@@ -1,22 +1,27 @@
 <template>
-  <span>Hello World!</span>
+  <div>
+    <router-link to="/about">About</router-link>
+  </div>
 </template>
 
 <script lang="ts">
-import {Options, Vue} from "vue-class-component";
 
-@Options({
-  components: {
-    MyComponent
+export default {
+  created() {
+    console.log("LENG ~ created", this);
   },
-  data() {
-    return {
+  mounted() {
+    console.log("LENG ~ mounted", this);
+  },
+  updated() {
+
+  },
+  destroyed() {
+  },
+  methods: {
+    onTest() {
+      console.warn("LENG ~ onTest", this);
     }
   }
-})
-export default class MyComponent extends Vue {}
+}
 </script>
-
-<style>
-
-</style>
