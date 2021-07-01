@@ -5,9 +5,11 @@ import {ComponentCreator} from "js-library";
 
 export class VueComponentFactory implements ComponentCreator {
     private parent: AgGridVue;
+    private plugins: any[];
 
-    constructor(parent: AgGridVue) {
+    constructor(parent: AgGridVue, plugins: any[]) {
         this.parent = parent;
+        this.plugins = plugins;
     }
 
     private tryC(prefix: any, componentDefinition: any) {
@@ -25,7 +27,8 @@ export class VueComponentFactory implements ComponentCreator {
             });
 
             const container = document.createElement('div');
-            const mountedComponent = createApp(extendedComponentDefinition)
+            const mountedComponent = createApp(extendedComponentDefinition);
+            this.plugins.forEach(plugin => mountedComponent.use(plugin));
             mountedComponent.mount(container);
 
             // console.log(componentInstance);
@@ -46,11 +49,6 @@ export class VueComponentFactory implements ComponentCreator {
             // look up the definition in Vue
             componentDefinition = this.searchForComponentInstance(component);
 
-            // this.tryC('1', componentDefinition)
-            // this.tryC('2', defineComponent(componentDefinition))
-            // this.tryC('3', {extends: defineComponent(componentDefinition)})
-            // this.tryC('4', {extends: defineComponent({...componentDefinition})})
-
             // it's probably an SFC, but if it has template attribute it's probably
             // an inline/non-sfc component (ie an object a template property)
             if (componentDefinition.template) {
@@ -58,10 +56,7 @@ export class VueComponentFactory implements ComponentCreator {
                 componentDefinition = {...defineComponent(componentDefinition)};
             } else {
                 // SFC
-                componentDefinition = {extends: defineComponent({...componentDefinition})}
-
-                // ORIGINAL!!!
-                // componentDefinition = {extends: defineComponent(componentDefinition)};
+                componentDefinition = {extends: defineComponent(componentDefinition)};
             }
         } else {
             componentDefinition = {extends: defineComponent({...component})}
@@ -97,19 +92,12 @@ export class VueComponentFactory implements ComponentCreator {
             }
         });
 
-        // const container = document.createElement('div');
-        // const childTree  = h(extendedComponentDefinition, {})
-        // console.log((window as any)._context);
-        // childTree.appContext = (window as any)._context;
-        // childTree.appContext = (parent as any).currentInstance.appContext;
-        // render(childTree, container)
-
         // with vue 3 we need to provide a container to mount into (not necessary in vue 2), so create a wrapper div here
         const container = document.createElement('div');
         const mountedComponent = createApp(extendedComponentDefinition)
+        this.plugins.forEach(plugin => mountedComponent.use(plugin));
         mountedComponent.mount(container);
 
-        debugger
         // note that the component creation is synchronous so that componentInstance is set by this point
         // return {mountedComponent, componentInstance};
         // return {mountedComponent, componentInstance}

@@ -5,7 +5,8 @@ import {Library} from "js-library";
 
 @Options({
     props: {
-        component: undefined
+        component: undefined,
+        plugins: undefined
     },
     watch: {
         component(currentValue: any, previousValue: any) {
@@ -23,7 +24,7 @@ export class AgGridVue extends Vue {
     }
 
     public mounted() {
-        this.library = new Library(new VueComponentFactory(this));
+        this.library = new Library(new VueComponentFactory(this, (this as any).plugins));
 
         this.library.displayComponent((this as any).component)
     }
