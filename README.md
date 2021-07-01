@@ -13,8 +13,8 @@ npm run serve
 The following warning will be thrown when dynamically creating the component:
 
 > [Vue warn]: Invalid VNode type: Symbol(Text) (symbol)
-    at <RouterLink to="/about" >
-    at <App>
+> at <RouterLink to="/about" >
+> at <App>
 
   
 The "client" app will use vue-library/AgGridVue.ts to dynamically create a Vue component. This works fine for regular components, but as soon
